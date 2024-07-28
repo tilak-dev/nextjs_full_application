@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 type ConnectObject = {
   isConnected?: number;
+  
 };
 
 const connection: ConnectObject = {};
@@ -23,6 +24,6 @@ async function dbConnect():Promise<void> {
     console.log("db falied to connect",error)
     process.exit(1)
   }
-}
+} 
 
 export default dbConnect
