@@ -8,8 +8,6 @@ const UsernameQuerySchema = z.object({
 });
 
 export async function GET(request: Request) {
-
-
   await dbConnect();
   try {
     const { searchParams } = new URL(request.url);
@@ -19,17 +17,17 @@ export async function GET(request: Request) {
     };
     //validates with zod
     const result = UsernameQuerySchema.safeParse(queryParams);
-
-    console.log(result); //todo remove
+    // console.log(result); //todo remove
+  
     if (!result.success) {
       const usernameErrors = result.error.format().username?._errors || [];
       return Response.json(
         {
-          succes: false,
+          success: false,
           message:
             usernameErrors?.length > 0
-              ? usernameErrors.join(", ")
-              : "Invalid query parameters",
+              ? usernameErrors.join(', ')
+              : 'Invalid query parameters',
         },
         { status: 400 }
       );
@@ -46,7 +44,7 @@ export async function GET(request: Request) {
           succes: false,
           message: "username already taken",
         },
-        { status: 400 }
+        { status: 200 }
       );
     }
     return Response.json(
@@ -54,7 +52,7 @@ export async function GET(request: Request) {
         succes: true,
         message: "username has uniqueness",
       },
-      { status: 400 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("error in checking username uniqueness" + error);

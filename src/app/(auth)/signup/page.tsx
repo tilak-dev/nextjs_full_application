@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -51,7 +50,6 @@ export default function page() {
           const response = await axios.get(
             `/api/check-username-uniqueness?username=${username}`
           );
-          console.log(response);
           setUsernameMessage(response.data.message);
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
@@ -70,7 +68,6 @@ export default function page() {
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     try {
       const response = await axios.post<ApiResponse>("/api/signup", data);
-      console.log(response);
       toast({
         title: "Success",
         description: response.data.message,
@@ -89,7 +86,7 @@ export default function page() {
       setIsSubmit(false);
     }
   };
-
+  // console.log(usernameMessage.toString());
   return (
     <div className=" flex justify-center items-center min-h-screen bg-gray-200">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
@@ -117,14 +114,19 @@ export default function page() {
                           debounced(e.target.value);
                         }}
                       />
-                    </FormControl>
-                    <FormDescription>
-                      {isCheckingUsername && (
-                        <Loader2 className=" animate-spin" />
-                      )}
-                      <br />
-                      You use this name for getting feedback
-                    </FormDescription>
+                    </FormControl>{" "}
+                    <p
+                      className={`text-sm ${
+                        usernameMessage === "username has uniqueness"
+                          ? "text-green-500"
+                          :("text-red-500")
+                      }`}
+                    >
+                      {username.length >0? usernameMessage:""}
+                    </p>
+                    {isCheckingUsername && (
+                      <Loader2 className=" animate-spin" />
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}

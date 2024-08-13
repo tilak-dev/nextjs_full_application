@@ -4,8 +4,7 @@ export const usernameValidation = z
   .string()
   .min(2, "Username should have atleast 2 characters")
   .max(20, "Username should not have more than 20 characters")
-  .regex(
-    /^[a-zA-Z0-9_]+$/,
+  .regex(/^[a-zA-Z0-9_]+$/,
     "username must not constain any speacial character axcept '_'"
   );
 export const emailValidation = z
