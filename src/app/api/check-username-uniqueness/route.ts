@@ -21,6 +21,7 @@ export async function GET(request: Request) {
   
     if (!result.success) {
       const usernameErrors = result.error.format().username?._errors || [];
+      console.log(usernameErrors)
       return Response.json(
         {
           success: false,
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
     if (existingVerifiedUser) {
       return Response.json(
         {
-          succes: false,
+          success: false,
           message: "username already taken",
         },
         { status: 200 }
@@ -49,7 +50,7 @@ export async function GET(request: Request) {
     }
     return Response.json(
       {
-        succes: true,
+        success: true,
         message: "username has uniqueness",
       },
       { status: 200 }
@@ -58,7 +59,7 @@ export async function GET(request: Request) {
     console.error("error in checking username uniqueness" + error);
     return Response.json(
       {
-        succes: false,
+        success: false,
         message: "error in cheching username uniqueness",
       },
       { status: 500 }
