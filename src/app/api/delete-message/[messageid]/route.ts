@@ -1,15 +1,18 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/options";
+import { authOptions } from "../../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import { User } from "next-auth";
-import mongoose from "mongoose";
 
-export async function GET(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { messageid: string } }
+) {
+  const messageId = params.messageid;
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const user = session?.user;
+  const user: User = session?.user as User;
 
   if (!session || !session.user) {
     return Response.json(
@@ -22,41 +25,37 @@ export async function GET(request: Request) {
       }
     );
   }
-
-  const userId = new mongoose.Types.ObjectId(user?._id);
   try {
-    const user = await UserModel.aggregate([
-      { $match: { id: userId } },
-      { $unwind: "$messages" },
-      { $sort: { "messages.createAt": -1 } },
-      { $group: { _id: "$_id", messages: { $push: "$messages" } } },
-    ]);
-    if (!user || user.length === 0) {
+    const updatedResult = await UserModel.updateOne(
+      { _id: user._id },
+      { $pull: { messages: { _id: messageId } } }
+    );
+    if (updatedResult.modifiedCount == 0) {
       return Response.json(
         {
           success: false,
-          message: "user not found",
+          message: "message not already deleted or not found ",
         },
         {
-          status: 404,
+          status: 401,
         }
       );
     }
     return Response.json(
       {
         success: true,
-        messages: user[0].messages,
+        message: "message deleted",
       },
       {
         status: 200,
       }
     );
   } catch (error) {
-    ("error in get-messages");
+    console.log("Error in Deleting message",error)
     return Response.json(
       {
         success: false,
-        message: "error in get-messages ",
+        message: "Error in Deleting message",
       },
       {
         status: 500,
