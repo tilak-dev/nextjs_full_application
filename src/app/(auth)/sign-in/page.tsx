@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import {
@@ -40,23 +40,23 @@ export default function page() {
       identifier: data.identifier,
       password: data.password,
     });
-    if(result?.error){
-     if(result.error){
-      toast({
-        title:"Login Failed",
-        description:"Incorrect username or Password",
-        variant: "destructive"
-      })
-     }else{
-      toast({
-        title:"Error in login",
-        description: result.error,
-        variant: "destructive"
-      })
-     }
+    if (result?.error) {
+      if (result.error) {
+        toast({
+          title: "Login Failed",
+          description: "Incorrect username or Password",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error in login",
+          description: result.error,
+          variant: "destructive",
+        });
+      }
     }
-    if(result?.url){
-      router.replace("/dashboard")
+    if (result?.url) {
+      router.replace("/dashboard");
     }
   };
   return (
@@ -114,10 +114,10 @@ export default function page() {
             </form>
           </Form>
           <div className="text-center mt-4">
-           Don't have account?
+            Don't have account?
             <Link
               className="text-blue-500 hover:text-blue-800"
-              href={"/sign-in"}
+              href={"/signup"}
             >
               Sign up
             </Link>
