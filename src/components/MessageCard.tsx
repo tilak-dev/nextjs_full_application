@@ -28,7 +28,7 @@ type MessageCardProps = {
   onMessageDelete: (messageId: string) => void;
 };
 
-export default function MessageCards({
+export default function MessageCard({
   message,
   onMessageDelete,
 }: MessageCardProps) {
