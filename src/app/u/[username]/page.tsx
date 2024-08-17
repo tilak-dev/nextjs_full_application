@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { messageValidationSchema } from "@/schemas/messageSchema";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function page() {
   const [userMaessage, setUserMassage] = useState("");
@@ -76,8 +77,8 @@ export default function page() {
                   <FormItem className="">
                     <p className=" text-sm font-bold">Send Anonymous Message to @{params.username}</p>
                     <FormControl>
-                      <Input
-                        className="input input-bordered w-full p-2 mr-2 "
+                      <Textarea
+                        className="input input-bordered w-full p-2 mr-2 resize-none "
                         placeholder="message"
                         {...field}
                       />
@@ -100,8 +101,9 @@ export default function page() {
               </div>
             </form>
           </Form>
-        </div>
+        </div><strong><i>AI pr kaam krna h </i></strong>
       </div>
+      
     </div>
   );
 }

@@ -35,4 +35,4 @@ export async function POST(req: Request) {
       throw error;
     }
   }
-}
+};
