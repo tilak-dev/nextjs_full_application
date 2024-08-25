@@ -114,11 +114,7 @@ function page() {
   };
   //making url
   const { username } = session?.user as User;
-  if(!username){
-    return ({
-      console.log(username)
-    })
-  }
+
   //todo do more research
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
