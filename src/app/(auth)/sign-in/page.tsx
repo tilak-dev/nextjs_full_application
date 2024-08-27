@@ -19,8 +19,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { signInSchema } from "@/schemas/signinSchema";
 import { signIn } from "next-auth/react";
+import dynamic from "next/dynamic";
 
-export default function page() {
+ function Page() {
   const [isSubmit, setIsSubmit] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -127,3 +128,5 @@ export default function page() {
     </div>
   );
 }
+
+export default dynamic(()=>Promise.resolve(Page),{ssr:false})

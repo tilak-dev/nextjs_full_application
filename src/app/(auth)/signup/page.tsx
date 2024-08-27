@@ -21,8 +21,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
 
-export default function page() {
+function Page() {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -190,3 +191,5 @@ export default function page() {
     </div>
   );
 }
+
+export default dynamic(()=>Promise.resolve(Page),{ssr:false})
