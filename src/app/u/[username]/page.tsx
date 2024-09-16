@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiRespone";
@@ -12,17 +12,17 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { messageValidationSchema } from "@/schemas/messageSchema";
 import { Textarea } from "@/components/ui/textarea";
+import QuestionPage from "@/components/QuestionPage";
 
 export default function page() {
-  const [userMaessage, setUserMassage] = useState("");
+  const [responseMessage, setResponseMessage] = useState<string | null>(null);
+  const [userMaessage, setUserMassage] = useState<string | null>(null);
   const [isSubmit, setIsSubmit] = useState(false);
   const { toast } = useToast();
   const params = useParams<{ username: string }>();
@@ -34,6 +34,17 @@ export default function page() {
     },
   });
 
+  const getUserMessage = async () => {
+    try {
+      const response = await axios.post("/api/suggest-messages", {
+        prompt: userMaessage?.toString() || "",
+      });
+      setResponseMessage(response.data.response);
+      console.log(response.data.response);
+    } catch (error) {
+      console.error("Error in fetching user message ", error);
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof messageValidationSchema>) => {
     try {
@@ -56,9 +67,11 @@ export default function page() {
         variant: "destructive",
       });
       setIsSubmit(false);
+    }finally{
+      setUserMassage("")
+      setResponseMessage("")
     }
   };
-  // console.log(usernameMessage.toString());
   return (
     <div className=" flex justify-center min-h-screen bg-gray-200 ">
       <div className="w-full max-w-md p-8 space-y-8 rounded-lg">
@@ -68,19 +81,26 @@ export default function page() {
           </h1>
         </div>
         <div className="w-full">
-          <Form {...form} >
+          <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="content"
                 render={({ field }) => (
                   <FormItem className="">
-                    <p className=" text-sm font-bold">Send Anonymous Message to @{params.username}</p>
+                    <p className=" text-sm font-bold">
+                      Send Anonymous Message to @{params.username}
+                    </p>
                     <FormControl>
                       <Textarea
                         className="input input-bordered w-full p-2 mr-2 resize-none "
                         placeholder="message"
                         {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setUserMassage(e.target.value);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -88,7 +108,12 @@ export default function page() {
                 )}
               />
               <div className="w-full flex justify-center">
-                <Button className="" type="submit" disabled={isSubmit}>
+                <Button
+                  className=""
+                  type="submit"
+                  onClick={getUserMessage}
+                  disabled={isSubmit}
+                >
                   {isSubmit ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
@@ -101,9 +126,11 @@ export default function page() {
               </div>
             </form>
           </Form>
-        </div><strong><i>AI pr kaam krna h </i></strong>
+        </div>
+        <div className="">
+          <QuestionPage messageString={responseMessage} />
+        </div>
       </div>
-      
     </div>
   );
 }
